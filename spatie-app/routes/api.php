@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamMemberController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,18 +19,20 @@ use App\Http\Controllers\DepartmentController;
 |
 */
 
-Route::post('/create', [TaskController::class, 'assignTask']);
-Route::post('/show', [TaskController::class, 'show']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return Auth()->user();
+});
 
-Route::delete('/delete/{id}', [TaskController::class, 'destroy']);
 
-Route::put('/update/{id}', [TaskController::class, 'Update_task']); // for updating complete start
-Route::put('/reassign/{id}', [TaskController::class, 'reassign_task']); // for reassigning the task
-//Route::resource('teams', TeamController::class);
+Route::post('add',[DepartmentController::class,'adding']);
 
-// '/api/team-members' -> this endpoint is for TeamMember
+Route::put('update/{id}',[DepartmentController::class,'updating']);
 
-//Route::resource('teammembers', TeamMemberController::class);
+Route::delete('delete/{id}',[DepartmentController::class,'delete']);
+
+Route::get('get',[DepartmentController::class,'getData']);
 
 
 // Routes for TeamController
@@ -52,19 +58,13 @@ Route::put('/memberupdate/{id}', [TeamMemberController::class, 'update']);
 Route::delete('/memberdestroy/{id}', [TeamMemberController::class, 'destroy']);
 
 
+Route::post('/create', [TaskController::class, 'assignTask']);
+Route::post('/show', [TaskController::class, 'show']);
 
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/register', [UserController::class, 'register']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::delete('/delete/{id}', [TaskController::class, 'destroy']);
 
-Route::post('add',[DepartmentController::class,'adding']);
-
-Route::put('update/{id}',[DepartmentController::class,'updating']);
-
-Route::delete('delete/{id}',[DepartmentController::class,'delete']);
-
-Route::get('get',[DepartmentController::class,'getData']);
+Route::put('/update/{id}', [TaskController::class, 'Update_task']); // for updating complete start
+Route::put('/reassign/{id}', [TaskController::class, 'reassign_task']); // for reassigning the task
 
 
+Route::middleware('auth:sanctum')->post('/permissions', [PermissionController::class, 'store']);

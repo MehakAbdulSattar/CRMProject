@@ -7,13 +7,27 @@ use Illuminate\Http\Request;
 // use App\Http\Controllers\Controller;
 
 class DepartmentController extends Controller
-{   
+{  
+    
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function adding(Request $request)
     {
-        return Department::create([
+        $department = Department::create([
             'name'=>$request->input('name'),
         ]) ;
+
+        if (Auth()->user()->hasPermission('Wow',$department)) {
+            return $department;
+        } else {
+            // User does not have permission
+            return response()->json(['message' => 'Permission denied'], 403);
+        }
+
     }
+    
 
     // /**
     //  * Summary of updating
