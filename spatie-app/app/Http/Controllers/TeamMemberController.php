@@ -21,10 +21,11 @@ class TeamMemberController extends Controller
 
     public function store(Request $request)
     {
-        return TeamMember::create([
-            'Team_ID' => $request->Team_ID,
-            'User_ID' => $request->User_ID,
-        ]);
+        
+        return response()->json([TeamMember::create([
+            'team_id' => $request->team_id,
+            'user_id' => $request->user_id,
+        ])]);
 
         // if ($validator->fails()) {
         //     return response()->json(['error' => $validator->errors()], 400);
@@ -35,36 +36,6 @@ class TeamMemberController extends Controller
         //return response()->json(['message' => 'Team member created successfully', 'data' => $teamMember], 201);
     }
 
-    // show: Get a specific team member by ID.
-
-    // public function show($id)
-    // {
-    //     $teamMember = TeamMember::find($id);
-
-    //     if (!$teamMember) {
-    //         return response()->json(['error' => 'Team member not found'], 404);
-    //     }
-
-    //     return response()->json(['data' => $teamMember]);
-    // }
-
-    // update: Update a team member's information.
-
-    // public function update(Request $request)
-    // {
-    //     $teamMember = TeamMember::find($request->id);
-
-    //     if (!$teamMember) {
-    //         return response()->json(['error' => 'Team member not found'], 404);
-    //     }
-
-    //     $teamMember->update([
-    //         'Team_ID' => 'required|exists:teams,id',
-    //         'User_ID' => 'required|exists:users,id',
-    //     ]);
-
-    //     return response()->json(['message' => 'Team member updated successfully', 'data' => $teamMember]);
-    // }
 
     // destroy: Delete a team member.
 

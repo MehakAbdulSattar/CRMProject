@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\User;
 
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPermissions, HasRoles;
     protected $fillable = ['name'];
 }

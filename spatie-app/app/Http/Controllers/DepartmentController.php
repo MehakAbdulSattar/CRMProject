@@ -1,6 +1,6 @@
 <?php
 
- namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
@@ -13,18 +13,22 @@ class DepartmentController extends Controller
     {
         $this->middleware('auth:api');
     }
+
+
     public function adding(Request $request)
     {
         $department = Department::create([
             'name'=>$request->input('name'),
         ]) ;
 
-        if (Auth()->user()->hasPermission('Wow',$department)) {
-            return $department;
-        } else {
-            // User does not have permission
-            return response()->json(['message' => 'Permission denied'], 403);
-        }
+        return $department;
+
+        // if (Auth()->user()->hasPermission('Wow',$department)) {
+        //     return $department;
+        // } else {
+        //     // User does not have permission
+        //     return response()->json(['message' => 'Permission denied'], 403);
+        // }
 
     }
     

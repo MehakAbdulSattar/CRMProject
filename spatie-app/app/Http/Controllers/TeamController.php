@@ -31,22 +31,6 @@ class TeamController extends Controller
 
     // store: Create a new team.
 
-    // public function store(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|string|max:255',
-    //         'department_id' => 'required|exists:departments,id',
-    //         'TeamLead_ID' => 'required|exists:users,id',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['error' => $validator->errors()], 400);
-    //     }
-
-    //     $team = Team::create($request->all());
-
-    //     return response()->json(['message' => 'Team created successfully', 'data' => $team], 201);
-    // }
 
 
     public function store(Request $request)
@@ -56,15 +40,15 @@ class TeamController extends Controller
             'department_id' => $request->input('department_id'),
             'teamlead_id' => $request->input('teamlead_id'),
         ]);
+        return $team;
         //$permissions = Permission::where('user_id',auth()->user()->id)->get();
-        if (Auth()->user()->hasPermission('create_team',$team)) {
-            // User has permission to update the team
-            // Your update logic here...
-            return $team;
-        } else {
-            // User does not have permission
-            return response()->json(['message' => 'Permission denied'], 403);
-        }
+        // if (Auth()->user()->hasPermissionTo('team_create')) {
+        //     // User has permission to update the team
+        //     return $team;
+        // } else {
+        //     // User does not have permission
+        //     return response()->json(['message' => 'Permission denied'], 403);
+        // }
     
         
 
@@ -74,43 +58,42 @@ class TeamController extends Controller
 
     // show: Get a specific team by ID.
 
-    public function show($id)
-    {
-        // return $Team=Team::all();
-        $team = Team::find($id);
-
-
-        if (!$team) {
-            return response()->json(['error' => 'Team not found'], 404);
-        }
-
-        return response()->json(['data' => $team]);
-    }
-
-    // update: Update a team's information.
-
-    // public function update(Request $request, $id)
+    // public function show($id)
     // {
+    //     // return $Team=Team::all();
     //     $team = Team::find($id);
-
     //     if (!$team) {
     //         return response()->json(['error' => 'Team not found'], 404);
     //     }
 
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|string|max:255',
-    //         'Department_ID' => 'required|exists:departments,id',
-    //         'TeamLead_ID' => 'required|exists:users,id',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['error' => $validator->errors()], 400);
-    //     }
-
-    //     $team->update($request->all());
-
-    //     return response()->json(['message' => 'Team updated successfully', 'data' => $team]);
+    //     return response()->json(['data' => $team]);
     // }
+
+
+    public function show($id)
+    {
+        // Find the Team by ID
+        $team = Team::find($id);
+
+        // Check if the Team exists
+        if (!$team) {
+            return response()->json(['error' => 'Team not found'], 404);
+        }
+
+        // Check if the user has permission to view this Team
+        // if (Auth()->user()->hasPermission('view_team',$team))
+        // {
+        //     return response()->json(['error' => 'Unauthorized'], 403);
+        // }
+
+        // // If the user has the necessary permission, return the Team data
+        return response()->json(['data' => $team]);
+    }
+
+
+    // update: Update a team's information.
+
+
 
     public function update(Request $request)
     {
@@ -121,9 +104,9 @@ class TeamController extends Controller
         }
         
         $team->update([
-                'name' => $request->name,
-                'department_id' => $request->department_id,
-                'teamlead_id' => $request->teamlead_id,
+            'name' => $request->input('name'),
+            'department_id' => $request->input('department_id'),
+            'teamlead_id' => $request->input('teamlead_id'),
         ]);
         return response()->json(['message' => 'Team updated successfully', 'data' => $team]);
 

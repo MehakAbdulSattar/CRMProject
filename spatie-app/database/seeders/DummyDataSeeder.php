@@ -9,13 +9,15 @@ use App\Models\Task;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User; // Replace with your model
+use App\Models\Permission; // Replace with your model
+
 
 class DummyDataSeeder extends Seeder
 {
     public function run()
     {
         // Example: Insert dummy users
-        User::create([
+        $user1=User::create([
             'name' => 'John Doe',
             'email' => 'john@gmail.com',
             'password' => bcrypt('password'),
@@ -45,7 +47,7 @@ class DummyDataSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        User::create([
+       $user =  User::create([
             'name' => 'Doka',
             'email' => 'doka@gmail.com',
             'password' => bcrypt('password'),
@@ -160,8 +162,56 @@ class DummyDataSeeder extends Seeder
         ]);
         
 
+        $permissions= [
+        'user_create',
+        'user_view',
+        'user_edit',
+        'user_delete',
+        
+        'department_create',
+        'department_view',
+        'department_edit',
+        'department_delete',
+        
+        
+        'team_create',
+        'team_view',
+        'team_edit',
+        'team_delete',
+        
+        'team_member_add',
+        'team_member_view',
+        'team_member_remove',
+        
+        
+        'task_create',
+        'task_view',
+        'task_edit',
+        'task_delete',
+    ];
+    
+        foreach ($permissions as $permission)
+        {
+            Permission::create([
+                'name' => $permission,
+                'guard_name'=>'web',
+            ]);
+
+            Permission::create([
+                'name' => $permission,
+                'guard_name'=>'api',
+            ]);
+
+        }
+
+
+        $user->givePermissionTo($permissions); //doku
+
+        $user1->givePermissionTo(['team_create', 'department_create']); //john
+
 
 
     }
+
 }
 

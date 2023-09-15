@@ -21,50 +21,36 @@ use App\Http\Controllers\PermissionController;
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::post('/logout', [UserController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) 
+{
     return Auth()->user();
 });
 
-
-Route::post('add',[DepartmentController::class,'adding']);
-
-Route::put('update/{id}',[DepartmentController::class,'updating']);
-
-Route::delete('delete/{id}',[DepartmentController::class,'delete']);
-
-Route::get('get',[DepartmentController::class,'getData']);
+// Routes for DepartmentController
+Route::middleware(['auth:api', 'permission:department_create'])->post('add',[DepartmentController::class,'adding']);
+Route::middleware(['auth:api', 'permission:department_edit'])->post('dupdate/{id}',[DepartmentController::class,'updating']);
+Route::middleware(['auth:api', 'permission:department_delete'])->delete('delete/{id}',[DepartmentController::class,'delete']);
+Route::middleware(['auth:api', 'permission:department_view'])->get('get',[DepartmentController::class,'getData']);
 
 
 // Routes for TeamController
-Route::get('/teamindex', [TeamController::class, 'index']);
+Route::middleware(['auth:api', 'permission:team_view'])->get('/teamindex', [TeamController::class, 'index']);
+Route::middleware(['auth:api', 'permission:team_create'])->post('/teamcreate', [TeamController::class, 'store']);
+Route::middleware(['auth:api', 'permission:team_view'])->get('/teamshow/{id}', [TeamController::class, 'show']);
+Route::middleware(['auth:api', 'permission:team_edit'])->post('/teamupdate/{id}', [TeamController::class, 'update']);
+Route::middleware(['auth:api', 'permission:team_delete'])->delete('/teamdestroy/{id}', [TeamController::class, 'destroy']);
 
-Route::post('/teamcreate', [TeamController::class, 'store']);
-
-Route::get('/teamshow/{id}', [TeamController::class, 'show']);
-
-Route::put('/teamupdate', [TeamController::class, 'update']);
-
-Route::delete('/teamdestroy/{id}', [TeamController::class, 'destroy']);
 
 // Routes for TeamMemberController
-Route::get('/memberindex', [TeamMemberController::class, 'index']);
-
-Route::post('/membercreate', [TeamMemberController::class, 'store']);
-
-Route::get('/membershow/{id}', [TeamMemberController::class, 'show']);
-
-Route::put('/memberupdate/{id}', [TeamMemberController::class, 'update']);
-
-Route::delete('/memberdestroy/{id}', [TeamMemberController::class, 'destroy']);
+Route::middleware(['auth:api', 'permission:team_member_view'])->get('/memberindex', [TeamMemberController::class, 'index']);
+Route::middleware(['auth:api', 'permission:team_member_add'])->post('/membercreate', [TeamMemberController::class, 'store']);
+Route::middleware(['auth:api', 'permission:team_member_remove'])->delete('/memberdestroy/{id}', [TeamMemberController::class, 'destroy']);
 
 
-Route::post('/create', [TaskController::class, 'assignTask']);
-Route::post('/show', [TaskController::class, 'show']);
-
-Route::delete('/delete/{id}', [TaskController::class, 'destroy']);
-
-Route::put('/update/{id}', [TaskController::class, 'Update_task']); // for updating complete start
-Route::put('/reassign/{id}', [TaskController::class, 'reassign_task']); // for reassigning the task
-
-
-Route::middleware('auth:sanctum')->post('/permissions', [PermissionController::class, 'store']);
+// Routes for TaskController
+Route::middleware(['auth:api', 'permission:task_create'])->post('/create', [TaskController::class, 'assignTask']);
+Route::middleware(['auth:api', 'permission:task_view'])->get('/show', [TaskController::class, 'show']);
+Route::middleware(['auth:api', 'permission:task_delete'])->delete('/delete/{id}', [TaskController::class, 'destroy']);
+Route::middleware(['auth:api', 'permission:task_edit'])->post('/update/{id}', [TaskController::class, 'Update_task']); // for updating complete start
+//Route::middleware(['auth:api', 'permission:task_assign_teams'])->put('/reassign/{id}', [TaskController::class, 'reassign_task']); // for reassigning the task

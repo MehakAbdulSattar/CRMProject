@@ -39,7 +39,7 @@ class TaskController extends Controller
 
         $task->name = $request['name'];
         $task->status = $request['status'];
-        $task->comments = $request['comment'];
+        $task->comments = $request['comments'];
         $task->user_id = $request['user_id'];
 
         $task->save();
